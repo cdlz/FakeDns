@@ -357,7 +357,8 @@ class RuleEngine:
             # to our DNS server.
             s = socket.socket(type=socket.SOCK_DGRAM)
             s.settimeout(3.0)
-            addr = ('8.8.8.8', 53)
+            print "not found at config file,then resolve by parent server: " + args.pdns
+            addr = (args.pdns, 53)
             s.sendto(query.data, addr)
             data = s.recv(1024)
             s.close()
@@ -399,6 +400,10 @@ if __name__ == '__main__':
         '--rebind', dest='rebind', action='store_true', required=False,
         default=False, help="Enable DNS rebinding attacks - responds with one "
         "result the first request, and another result on subsequent requests")
+    parser.add_argument(
+        '--pdns', dest='pdns', action='store', required=True,
+        default=False, help="parent dns server "
+        "if domain not in config file,then resolve domain from this parent dns server.")
 
     args = parser.parse_args()
 
